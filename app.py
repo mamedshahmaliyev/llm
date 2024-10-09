@@ -5,7 +5,6 @@ import google.generativeai as genai
 from openai import OpenAI
 import json,os
 
-
 from fastapi import FastAPI, Query, HTTPException, Request, Depends, Body
 from fastapi.responses import RedirectResponse, JSONResponse, PlainTextResponse
 
