@@ -5,7 +5,7 @@ import google.generativeai as genai
 from openai import OpenAI
 import json,os
 
-from fastapi import FastAPI, Query, HTTPException, Request, Depends, Body
+from fastapi import FastAPI, Query, HTTPException, Depends, Body
 from fastapi.responses import RedirectResponse, JSONResponse, PlainTextResponse
 
 app = FastAPI()
@@ -37,9 +37,9 @@ def isAuthorized(apiKey: str = Depends(header_scheme)) -> str:
         raise HTTPException(status_code=403, detail="Unauthorized")
     return apiKey
     
-@app.get("/", response_class=RedirectResponse, include_in_schema=False)
-async def index():
-    return "/docs"
+# @app.get("/", response_class=RedirectResponse, include_in_schema=False)
+# async def index():
+#     return "/docs"
 
 @app.post("/ask", dependencies=[Depends(isAuthorized)])
 async def ask(
