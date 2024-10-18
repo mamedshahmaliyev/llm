@@ -5,6 +5,8 @@ import google.generativeai as genai
 from openai import OpenAI
 import json,os
 
+from pydantic import Field, BaseModel
+
 from fastapi import FastAPI, Query, HTTPException, Depends, Body
 from fastapi.responses import RedirectResponse, JSONResponse, PlainTextResponse
 
@@ -41,12 +43,15 @@ def isAuthorized(apiKey: str = Depends(header_scheme)) -> str:
 # async def index():
 #     return "/docs"
 
+class Input(BaseModel):
+    prompt: str = "How many planets are in the Solar System? Return only planet list in plain json array format."
+
 @app.post("/ask", dependencies=[Depends(isAuthorized)])
 async def ask(
-    prompt: str = Body("How many planets are in the Solar System?", media_type="text/plain"),
+    input: Input,
     usePro: bool = False,
     isJson: bool = True,
     llm: str = Query('gemini', enum=['gemini', 'openai'])
 ):
-    r = getattr(LLM, llm)(prompt, usePro, isJson)
+    r = getattr(LLM, llm)(input.prompt, usePro, isJson)
     return PlainTextResponse(r) if not isJson else JSONResponse(r)
